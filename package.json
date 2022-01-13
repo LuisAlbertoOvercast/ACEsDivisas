@@ -11,6 +11,7 @@
   "dependencies": {
     "@microsoft/sp-core-library": "1.13.1",
     "@microsoft/sp-property-pane": "1.13.1",
+    "@microsoft/sp-http": "1.13.1",
     "@microsoft/sp-adaptive-card-extension-base": "1.13.1"
   },
   "devDependencies": {

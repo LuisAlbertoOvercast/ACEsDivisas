@@ -1,6 +1,7 @@
-import { IPropertyPaneConfiguration, PropertyPaneTextField } from '@microsoft/sp-property-pane';
+import { IPropertyPaneConfiguration,PropertyPaneTextField, PropertyPaneButton, PropertyPaneCheckbox, PropertyPaneChoiceGroup, PropertyPaneDynamicField, PropertyPaneDynamicFieldSet, PropertyPaneLabel, PropertyPaneLink, PropertyPaneSlider, PropertyPaneToggle } from '@microsoft/sp-property-pane';
 import * as strings from 'AcEsDivisasAdaptiveCardExtensionStrings';
 
+const IPropertyPaneChoiceGroupOption = [];
 export class AcEsDivisasPropertyPane {
   public getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
@@ -14,12 +15,23 @@ export class AcEsDivisasPropertyPane {
                 PropertyPaneTextField('title', {
                   label: strings.TitleFieldLabel
                 }),
-                PropertyPaneTextField('iconProperty', {
-                  label: strings.IconPropertyFieldLabel
+                PropertyPaneSlider('days', {
+                  label: 'Number of days to view in advance',
+                  max: 7,
+                  min: 1
                 }),
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel,
-                  multiline: true
+                PropertyPaneToggle('showStaticContent', {
+                  label: "Show static content"
+                }),
+                PropertyPaneChoiceGroup('title', {
+                  label: "strings.TitleFieldLabel",
+                  options: IPropertyPaneChoiceGroupOption
+                }),
+                PropertyPaneCheckbox('title', {
+                  text: "strings.TitleFieldLabel"
+                }),
+                PropertyPaneDynamicField('title', {
+                  label: "strings.TitleFieldLabel"
                 })
               ]
             }

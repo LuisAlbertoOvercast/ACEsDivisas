@@ -3,9 +3,14 @@ import * as strings from 'AcEsDivisasAdaptiveCardExtensionStrings';
 import { IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensionState } from '../AcEsDivisasAdaptiveCardExtension';
 
 export interface IQuickViewData {
-  subTitle: string;
-  title: string;
-  description: string;
+  companyName: string;
+  primaryExchange: string;
+  symbol: string;
+  latestPrice: string;
+  latestUpdate: string;
+  open: string;
+  High: string,
+  Low: string;
 }
 
 export class QuickView extends BaseAdaptiveCardView<
@@ -14,14 +19,20 @@ export class QuickView extends BaseAdaptiveCardView<
   IQuickViewData
 > {
   public get data(): IQuickViewData {
+    const { Divisa, idSerie, precio, simbolo, } = this.state.items[0];
     return {
-      subTitle: strings.SubTitle,
-      title: strings.Title,
-      description: this.properties.description
+      companyName: "strings.SubTitle",
+      primaryExchange: "texto",
+      symbol: "texto",
+      latestPrice: Divisa,
+      latestUpdate: idSerie,
+      open: precio,
+      High: simbolo,
+      Low: simbolo
     };
   }
 
   public get template(): ISPFxAdaptiveCard {
-    return require('./template/QuickViewTemplate.json');
+    return require('./template/DivisasTemplate.json');
   }
 }
