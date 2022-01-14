@@ -4,13 +4,9 @@ import { IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensi
 
 export interface IQuickViewData {
   companyName: string;
-  primaryExchange: string;
-  symbol: string;
   latestPrice: string;
-  latestUpdate: string;
-  open: string;
-  High: string,
   Low: string;
+  changePercent: number;
 }
 
 export class QuickView extends BaseAdaptiveCardView<
@@ -18,17 +14,14 @@ export class QuickView extends BaseAdaptiveCardView<
   IAcEsDivisasAdaptiveCardExtensionState,
   IQuickViewData
 > {
-  public get data(): IQuickViewData {
-    const { Divisa, idSerie, precio, simbolo, } = this.state.items[0];
+  public get data(): IQuickViewData {    
+    const { Divisa, idSerie, precio, porcentaje } = this.state.items[this.state.currentIndex];
+
     return {
-      companyName: "strings.SubTitle",
-      primaryExchange: "texto",
-      symbol: "texto",
-      latestPrice: Divisa,
-      latestUpdate: idSerie,
-      open: precio,
-      High: simbolo,
-      Low: simbolo
+      companyName: Divisa,
+      latestPrice: precio,
+      Low: precio,
+      changePercent: porcentaje
     };
   }
 

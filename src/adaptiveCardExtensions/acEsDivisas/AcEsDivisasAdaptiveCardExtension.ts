@@ -14,13 +14,13 @@ export interface IAcEsDivisasAdaptiveCardExtensionProps {
 export interface IAcEsDivisasAdaptiveCardExtensionState {
   description: string;
   items: TipoCambio[];
-  currentIndex : number;
+  currentIndex: number;
 }
 export interface TipoCambio {
   Divisa: string,
   idSerie: string,
   precio: string,
-  simbolo: string
+  porcentaje: number
 }
 
 const CARD_VIEW_REGISTRY_ID: string = 'AcEsDivisas_CARD_VIEW';
@@ -40,7 +40,7 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
         Divisa: "",
         idSerie: "",
         precio: "",
-        simbolo: ""
+        porcentaje: 0
       },],
     };
 
@@ -80,32 +80,31 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
 
   private async ConsumoApi(): Promise<void> {
 
-    // let items: TipoCambio[];
-    let DatosEnvio = [{
-      Divisa: "euros",
-      idSerie: "SF46410",
-      precio: "",
-      simbolo: ""
+    let DatosEnvio = [
+      {
+        Divisa: "USD/MXN - Dólar estadounidense Peso mexicano",
+        idSerie: "SF63528",
+        precio: "",
+        porcentaje: 0
+      },
+      {
+        Divisa: "EUR/MXN - Euro Peso mexicano",
+        idSerie: "SF46410",
+        precio: "",
+        porcentaje: 0
 
-    },
-    {
-      Divisa: "dolares",
-      idSerie: "SF63528",
-      precio: "",
-      simbolo: ""
-    },
-    {
-      Divisa: "yen",
-      idSerie: "SF46406",
-      precio: "",
-      simbolo: ""
+      },
+      {
+        Divisa: "JPY/MXN - Yen japonés Peso mexicano",
+        idSerie: "SF46406",
+        precio: "",
+        porcentaje: 0
 
-    }]
+      }]
     const DatosUrl = {
       token: "a35f563a5479767053320fc4323468d884e4215f4450f845da7f0e5c3f9f836d",
       series: "SF63528,SF46410,SF46406"
     }
-    // const Url = "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43787,SF43784,SF43788,SF43786,SF43785,SF43717,SF63528/datos/oportuno?token=a35f563a5479767053320fc4323468d884e4215f4450f845da7f0e5c3f9f836d";
     const Url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/${DatosUrl.series}/datos/oportuno?token=${DatosUrl.token}`;
     const Configuracion = HttpClient.configurations.v1;
     const respuesta = await this.context.httpClient.get(Url, Configuracion)
@@ -118,46 +117,25 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
           return element.precio = elementos.datos[0].dato
         }
       });
-
     });
+
+    const Url1 = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/${DatosUrl.series}/datos/oportuno?token=${DatosUrl.token}&incremento=PorcObsAnt`;
+    const respuesta1 = await this.context.httpClient.get(Url1, Configuracion)
+    const resultado1 = await respuesta1.json();
+
+
+    resultado1.bmx.series.forEach(elementos => {
+
+      DatosEnvio.forEach(element => {
+        if (element.idSerie === elementos.idSerie) {
+          return element.porcentaje = parseFloat(elementos.datos[0].dato)
+        }
+      });
+    });
+
 
     console.log(DatosEnvio);
     this.setState({ items: DatosEnvio })
-    /*
-        const DatosEnvio = [
-          {
-            hoy: resultado.bmx.series[4].datos[0].dato,
-            AperturaVenta: resultado.bmx.series[0].datos[0].dato,
-            AperturaCompra: resultado.bmx.series[3].datos[0].dato,
-            MasAltoHoy: resultado.bmx.series[2].datos[0].dato,
-            MasBajoHoy: resultado.bmx.series[5].datos[0].dato,
-            fecha: resultado.bmx.series[3].datos[0].fecha,
-          }
-        ]
-    
-        
-        const DatosEnvio = [
-          { 
-            hoy: resultado.bmx.series[4].datos[0].dato,
-            AperturaVenta: resultado.bmx.series[0].datos[0].dato,
-            AperturaCompra: resultado.bmx.series[3].datos[0].dato,
-            MasAltoHoy: resultado.bmx.series[2].datos[0].dato,
-            MasBajoHoy: resultado.bmx.series[5].datos[0].dato,
-            fecha: resultado.bmx.series[3].datos[0].fecha,
-          }
-        ]
-        DatosEnvio.push( { 
-          hoy: resultado.bmx.series[4].datos[0].dato,
-          AperturaVenta: resultado.bmx.series[0].datos[0].dato,
-          AperturaCompra: resultado.bmx.series[3].datos[0].dato,
-          MasAltoHoy: resultado.bmx.series[2].datos[0].dato,
-          MasBajoHoy: resultado.bmx.series[5].datos[0].dato,
-          fecha: "resultado.bmx.series[3].datos[0].fecha,"
-        })*/
-
-    // this.setState({ items: DatosEnvio });
-
-
     return;
   }
 }

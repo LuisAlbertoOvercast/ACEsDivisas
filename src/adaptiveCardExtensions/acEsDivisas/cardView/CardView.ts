@@ -12,8 +12,6 @@ import { IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensi
 export class CardView extends BaseBasicCardView<IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensionState> {
   public get cardButtons(): [ICardButton] | [ICardButton, ICardButton] | undefined {
     const buttons: ICardButton[] = [];
-
-    // Hide the Previous button if at Step 1
     if (this.state.currentIndex > 0) {
       buttons.push({
         title: "Previous",
@@ -21,12 +19,11 @@ export class CardView extends BaseBasicCardView<IAcEsDivisasAdaptiveCardExtensio
           type: "Submit",
           parameters: {
             id: "previous",
-            op: -1, // Decrement the index
+            op: -1,
           },
         },
       });
     }
-    // Hide the Next button if at the end
     if (this.state.currentIndex < this.state.items.length - 1) {
       buttons.push({
         title: "Next",
@@ -34,7 +31,7 @@ export class CardView extends BaseBasicCardView<IAcEsDivisasAdaptiveCardExtensio
           type: "Submit",
           parameters: {
             id: "next",
-            op: 1, // Increment the index
+            op: 1,
           },
         },
       });
@@ -44,18 +41,18 @@ export class CardView extends BaseBasicCardView<IAcEsDivisasAdaptiveCardExtensio
   }
 
   public get data(): IBasicCardParameters {
-    const {Divisa, precio,simbolo} = this.state.items[this.state.currentIndex]
+    const { Divisa, precio } = this.state.items[this.state.currentIndex]
     return {
-      primaryText: `${Divisa} : ${precio} ${simbolo}`
+      primaryText: `${Divisa}`
     };
   }
 
   public get onCardSelection(): IQuickViewCardAction | IExternalLinkCardAction | undefined {
-    console.log(this.state.items);
+    //console.log(this.state.items);
     return {
-      type: 'ExternalLink',
+      type: 'QuickView',
       parameters: {
-        target: 'https://www.bing.com'
+        view: QUICK_VIEW_REGISTRY_ID
       }
     };
   }
