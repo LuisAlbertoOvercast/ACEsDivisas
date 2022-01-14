@@ -12,38 +12,13 @@ import { IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensi
 export class CardView extends BaseBasicCardView<IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensionState> {
   public get cardButtons(): [ICardButton] | [ICardButton, ICardButton] | undefined {
     const buttons: ICardButton[] = [];
-    if (this.state.currentIndex > 0) {
-      buttons.push({
-        title: "Previous",
-        action: {
-          type: "Submit",
-          parameters: {
-            id: "previous",
-            op: -1,
-          },
-        },
-      });
-    }
-    if (this.state.currentIndex < this.state.items.length - 1) {
-      buttons.push({
-        title: "Next",
-        action: {
-          type: "Submit",
-          parameters: {
-            id: "next",
-            op: 1,
-          },
-        },
-      });
-    }
-
     return buttons as [ICardButton] | [ICardButton, ICardButton];
   }
 
   public get data(): IBasicCardParameters {
     const { Divisa, precio } = this.state.items[this.state.currentIndex]
     return {
-      primaryText: `${Divisa}`
+      primaryText: `Tipo cambio`
     };
   }
 
