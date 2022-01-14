@@ -16,14 +16,14 @@ export class QuickView extends BaseAdaptiveCardView<
   IQuickViewData
 > {
   public get data(): IQuickViewData {    
-    const { Divisa, idSerie, precio, porcentaje } = this.state.items[this.state.currentIndex];
-
+    const { Divisa, precio, porcentaje } = this.state.items[this.state.currentIndex];
+    const TextoMostrar = this.properties.CriptomonedaActivado ? "Criptomonedas" : "Divisas"
     return {
       companyName: Divisa,
       latestPrice: precio,
       Low: precio,
       changePercent: porcentaje,
-      title: "Divisa"
+      title: TextoMostrar
     };
   }
 

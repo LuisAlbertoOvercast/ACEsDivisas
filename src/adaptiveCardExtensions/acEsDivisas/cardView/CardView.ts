@@ -16,9 +16,9 @@ export class CardView extends BaseBasicCardView<IAcEsDivisasAdaptiveCardExtensio
   }
 
   public get data(): IBasicCardParameters {
-    const { Divisa, precio } = this.state.items[this.state.currentIndex]
+    const TextoMostrar = this.properties.CriptomonedaActivado ? "Criptomonedas" : "Divisas"
     return {
-      primaryText: `Tipo cambio`
+      primaryText: `Tipo cambio: ${TextoMostrar}`
     };
   }
 

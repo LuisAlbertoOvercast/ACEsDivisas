@@ -9,6 +9,7 @@ export interface IAcEsDivisasAdaptiveCardExtensionProps {
   title: string;
   description: string;
   iconProperty: string;
+  CriptomonedaActivado: boolean;
 }
 
 export interface IAcEsDivisasAdaptiveCardExtensionState {
@@ -47,7 +48,11 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
     this.cardNavigator.register(CARD_VIEW_REGISTRY_ID, () => new CardView());
     this.quickViewNavigator.register(QUICK_VIEW_REGISTRY_ID, () => new QuickView());
 
-    return this.ConsumoApi();
+    if (this.properties.CriptomonedaActivado) {
+      return this.ConsumoApiCriptomoneda()
+    } else {
+      return this.ConsumoApiDivisa()
+    }
   }
 
   public get title(): string {
@@ -78,7 +83,7 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
     return this._deferredPropertyPane!.getPropertyPaneConfiguration();
   }
 
-  private async ConsumoApi(): Promise<void> {
+  private async ConsumoApiDivisa(): Promise<void> {
 
     let DatosEnvio = [
       {
@@ -137,5 +142,58 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
     console.log(DatosEnvio);
     this.setState({ items: DatosEnvio })
     return;
+  }
+
+  private async ConsumoApiCriptomoneda(): Promise<void> {
+
+    let DatosEnvio = [
+      {
+        Divisa: "Bitcoin",
+        idSerie: "BTC",
+        precio: "",
+        porcentaje: 0
+      },
+      {
+        Divisa: "DOGE",
+        idSerie: "DOGE",
+        precio: "",
+        porcentaje: 0
+
+      },
+      {
+        Divisa: "Ethereum",
+        idSerie: "ETH",
+        precio: "",
+        porcentaje: 0
+
+      }]
+    const DatosUrl = {
+      series: "BTC,ETH,DOGE"
+    }
+    const Url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${DatosUrl.series}&tsyms=MXN`;
+    const Configuracion = HttpClient.configurations.v1;
+    const respuesta = await this.context.httpClient.get(Url, Configuracion)
+    const resultado = await respuesta.json();
+    console.log(resultado.DISPLAY);
+
+
+    DatosEnvio.forEach(element => {
+      return element.precio = resultado.DISPLAY[element.idSerie]["MXN"].PRICE
+
+    });
+
+    console.log(DatosEnvio);
+    this.setState({ items: DatosEnvio })
+    return;
+  }
+
+
+
+  protected onPropertyPaneFieldChanged(propertyPath: string, oldValue: any, newValue: any): void {
+
+
+    if (propertyPath === "CriptomonedaActivado") {
+      this.properties.CriptomonedaActivado ? this.ConsumoApiCriptomoneda() : this.ConsumoApiDivisa()
+    }
   }
 }

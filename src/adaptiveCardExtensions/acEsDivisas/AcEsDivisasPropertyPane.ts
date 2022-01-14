@@ -20,19 +20,9 @@ export class AcEsDivisasPropertyPane {
                   max: 7,
                   min: 1
                 }),
-                PropertyPaneToggle('showStaticContent', {
-                  label: "Show static content"
+                PropertyPaneToggle('CriptomonedaActivado', {
+                  label: "Criptomoneda"
                 }),
-                PropertyPaneChoiceGroup('title', {
-                  label: "strings.TitleFieldLabel",
-                  options: IPropertyPaneChoiceGroupOption
-                }),
-                PropertyPaneCheckbox('title', {
-                  text: "strings.TitleFieldLabel"
-                }),
-                PropertyPaneDynamicField('title', {
-                  label: "strings.TitleFieldLabel"
-                })
               ]
             }
           ]
