@@ -1,5 +1,4 @@
-import { ISPFxAdaptiveCard, BaseAdaptiveCardView,IActionArguments } from '@microsoft/sp-adaptive-card-extension-base';
-import * as strings from 'AcEsDivisasAdaptiveCardExtensionStrings';
+import { ISPFxAdaptiveCard, BaseAdaptiveCardView, IActionArguments } from '@microsoft/sp-adaptive-card-extension-base';
 import { IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensionState } from '../AcEsDivisasAdaptiveCardExtension';
 
 export interface IQuickViewData {
@@ -8,6 +7,7 @@ export interface IQuickViewData {
   Low: string;
   changePercent: number;
   title: string;
+  color: string;
 }
 
 export class QuickView extends BaseAdaptiveCardView<
@@ -15,15 +15,17 @@ export class QuickView extends BaseAdaptiveCardView<
   IAcEsDivisasAdaptiveCardExtensionState,
   IQuickViewData
 > {
-  public get data(): IQuickViewData {    
+  public get data(): IQuickViewData {
     const { Divisa, precio, porcentaje } = this.state.items[this.state.currentIndex];
     const TextoMostrar = this.properties.CriptomonedaActivado ? "Criptomonedas" : "Divisas"
+    const color = porcentaje > 0 ? "good" : "attention";
     return {
       companyName: Divisa,
       latestPrice: precio,
       Low: precio,
       changePercent: porcentaje,
-      title: TextoMostrar
+      title: TextoMostrar,
+      color: color
     };
   }
 
@@ -34,13 +36,13 @@ export class QuickView extends BaseAdaptiveCardView<
   public onAction(action: IActionArguments): void {
     if (action.type === "Submit") {
       const { id, op } = action.data;
-      if (id ==="previous" ) {
+      if (id === "previous") {
         if (this.state.currentIndex > 0) {
           this.setState({ currentIndex: this.state.currentIndex + op });
         }
       }
 
-      if (id ==="next" ) {
+      if (id === "next") {
         if (this.state.currentIndex < this.state.items.length - 1) {
           this.setState({ currentIndex: this.state.currentIndex + op });
         }

@@ -86,7 +86,8 @@
                   "type": "TextBlock",
                   "text": "${latestPrice} ${if(changePercent >= 0, '▲', '▼')}(${changePercent}%)",
                   "size": "ExtraLarge",
-                  "wrap": true
+                  "wrap": true,
+                  "color": "${color}"
                 }
               ]
             }

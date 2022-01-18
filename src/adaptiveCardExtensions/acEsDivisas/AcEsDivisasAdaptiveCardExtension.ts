@@ -21,7 +21,8 @@ export interface TipoCambio {
   Divisa: string,
   idSerie: string,
   precio: string,
-  porcentaje: number
+  porcentaje: number,
+  abreviatura: string
 }
 
 const CARD_VIEW_REGISTRY_ID: string = 'AcEsDivisas_CARD_VIEW';
@@ -41,7 +42,8 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
         Divisa: "",
         idSerie: "",
         precio: "",
-        porcentaje: 0
+        porcentaje: 0,
+        abreviatura: ""
       },],
     };
 
@@ -60,7 +62,7 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
   }
 
   protected get iconProperty(): string {
-    return this.properties.iconProperty || require('./assets/SharePointLogo.svg');
+    return this.properties.iconProperty || require('./assets/exchange.svg');
   }
 
   protected loadPropertyPaneResources(): Promise<void> {
@@ -90,24 +92,25 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
         Divisa: "USD/MXN - Dólar estadounidense Peso mexicano",
         idSerie: "SF63528",
         precio: "",
-        porcentaje: 0
+        porcentaje: 0,
+        abreviatura: "USD"
       },
       {
         Divisa: "EUR/MXN - Euro Peso mexicano",
         idSerie: "SF46410",
         precio: "",
-        porcentaje: 0
-
+        porcentaje: 0,
+        abreviatura: "EUR"
       },
       {
         Divisa: "JPY/MXN - Yen japonés Peso mexicano",
         idSerie: "SF46406",
         precio: "",
-        porcentaje: 0
-
+        porcentaje: 0,
+        abreviatura: "JPY"
       }]
     const DatosUrl = {
-      token: "a35f563a5479767053320fc4323468d884e4215f4450f845da7f0e5c3f9f836d",
+      token: "c17ce7b2809a56055e1413f0735251cc8e1b06e6a8e1c01ec074f2c156df64ab",
       series: "SF63528,SF46410,SF46406"
     }
     const Url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/${DatosUrl.series}/datos/oportuno?token=${DatosUrl.token}`;
@@ -119,7 +122,10 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
     resultado.bmx.series.forEach(elementos => {
       DatosEnvio.forEach(element => {
         if (element.idSerie === elementos.idSerie) {
-          return element.precio = elementos.datos[0].dato
+          const PrecioAsignar = elementos.datos[0].dato;
+          let limitarDecimales = parseFloat(PrecioAsignar).toFixed(2);
+          return element.precio = limitarDecimales;
+          //   return element.precio = elementos.datos[0].dato
         }
       });
     });
@@ -137,9 +143,6 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
         }
       });
     });
-
-
-    console.log(DatosEnvio);
     this.setState({ items: DatosEnvio })
     return;
   }
@@ -151,38 +154,53 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
         Divisa: "Bitcoin",
         idSerie: "BTC",
         precio: "",
-        porcentaje: 0
+        porcentaje: 0,
+        abreviatura: "BTC"
       },
       {
-        Divisa: "DOGE",
-        idSerie: "DOGE",
+        Divisa: "Cardano",
+        idSerie: "ADA",
         precio: "",
-        porcentaje: 0
-
+        porcentaje: 0,
+        abreviatura: "ADA"
       },
       {
         Divisa: "Ethereum",
         idSerie: "ETH",
         precio: "",
-        porcentaje: 0
+        porcentaje: 23,
+        abreviatura: "ETH"
 
       }]
     const DatosUrl = {
-      series: "BTC,ETH,DOGE"
+      series: "BTC,ETH,ada"
     }
     const Url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${DatosUrl.series}&tsyms=MXN`;
     const Configuracion = HttpClient.configurations.v1;
     const respuesta = await this.context.httpClient.get(Url, Configuracion)
     const resultado = await respuesta.json();
-    console.log(resultado.DISPLAY);
 
 
     DatosEnvio.forEach(element => {
-      return element.precio = resultado.DISPLAY[element.idSerie]["MXN"].PRICE
+      const precio = resultado.DISPLAY[element.idSerie]["MXN"].PRICE;
+      let cambio2 = precio.replace('MXN ', '')
+      return element.precio = cambio2
 
     });
 
-    console.log(DatosEnvio);
+    DatosEnvio.forEach(element => {
+      const precio_cierre = resultado.DISPLAY[element.idSerie]["MXN"].OPEN24HOUR;
+      let cambio = precio_cierre.replace('MXN ', '')
+      cambio = cambio.replace(',', '')
+      const precio = resultado.DISPLAY[element.idSerie]["MXN"].PRICE;
+      let cambio2 = precio.replace('MXN ', '')
+      cambio2 = cambio2.replace(',', '')
+      let diferencia_porcentaje = ((parseFloat(cambio2) - parseFloat(cambio)) * 100) / cambio2
+      let cambioPorcentaje = diferencia_porcentaje.toFixed(2);
+      return element.porcentaje = parseFloat(cambioPorcentaje);
+
+    });
+
     this.setState({ items: DatosEnvio })
     return;
   }

@@ -1,4 +1,4 @@
-import { IPropertyPaneConfiguration,PropertyPaneTextField, PropertyPaneButton, PropertyPaneCheckbox, PropertyPaneChoiceGroup, PropertyPaneDynamicField, PropertyPaneDynamicFieldSet, PropertyPaneLabel, PropertyPaneLink, PropertyPaneSlider, PropertyPaneToggle } from '@microsoft/sp-property-pane';
+import { IPropertyPaneConfiguration, PropertyPaneTextField, PropertyPaneButton, PropertyPaneCheckbox, PropertyPaneChoiceGroup, PropertyPaneDynamicField, PropertyPaneDynamicFieldSet, PropertyPaneLabel, PropertyPaneLink, PropertyPaneSlider, PropertyPaneToggle } from '@microsoft/sp-property-pane';
 import * as strings from 'AcEsDivisasAdaptiveCardExtensionStrings';
 
 const IPropertyPaneChoiceGroupOption = [];
@@ -14,11 +14,6 @@ export class AcEsDivisasPropertyPane {
               groupFields: [
                 PropertyPaneTextField('title', {
                   label: strings.TitleFieldLabel
-                }),
-                PropertyPaneSlider('days', {
-                  label: 'Number of days to view in advance',
-                  max: 7,
-                  min: 1
                 }),
                 PropertyPaneToggle('CriptomonedaActivado', {
                   label: "Criptomoneda"

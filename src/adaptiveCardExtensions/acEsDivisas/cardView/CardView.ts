@@ -1,24 +1,32 @@
 import {
   BaseBasicCardView,
+  BasePrimaryTextCardView,
   IBasicCardParameters,
+  IPrimaryTextCardParameters,
   IExternalLinkCardAction,
   IQuickViewCardAction,
   ICardButton,
   IActionArguments
 } from '@microsoft/sp-adaptive-card-extension-base';
 import * as strings from 'AcEsDivisasAdaptiveCardExtensionStrings';
+import { Description } from 'AcEsDivisasAdaptiveCardExtensionStrings';
 import { IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensionState, QUICK_VIEW_REGISTRY_ID } from '../AcEsDivisasAdaptiveCardExtension';
 
-export class CardView extends BaseBasicCardView<IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensionState> {
+export class CardView extends BasePrimaryTextCardView<IAcEsDivisasAdaptiveCardExtensionProps, IAcEsDivisasAdaptiveCardExtensionState> {
   public get cardButtons(): [ICardButton] | [ICardButton, ICardButton] | undefined {
     const buttons: ICardButton[] = [];
     return buttons as [ICardButton] | [ICardButton, ICardButton];
   }
 
-  public get data(): IBasicCardParameters {
+  public get data(): IPrimaryTextCardParameters {
     const TextoMostrar = this.properties.CriptomonedaActivado ? "Criptomonedas" : "Divisas"
     return {
-      primaryText: `Tipo cambio: ${TextoMostrar}`
+      primaryText: TextoMostrar,
+      description: `
+    ${this.state.items[0].abreviatura} = $${this.state.items[0].precio}
+    ${this.state.items[1].abreviatura} = $${this.state.items[1].precio}
+    ${this.state.items[2].abreviatura} = $${this.state.items[2].precio}
+     `
     };
   }
 
