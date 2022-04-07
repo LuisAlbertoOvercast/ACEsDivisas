@@ -158,11 +158,11 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
         abreviatura: "BTC"
       },
       {
-        Divisa: "Cardano",
-        idSerie: "ADA",
+        Divisa: "Stox",
+        idSerie: "STOX",
         precio: "",
         porcentaje: 0,
-        abreviatura: "ADA"
+        abreviatura: "STOX"
       },
       {
         Divisa: "Ethereum",
@@ -173,7 +173,7 @@ export default class AcEsDivisasAdaptiveCardExtension extends BaseAdaptiveCardEx
 
       }]
     const DatosUrl = {
-      series: "BTC,ETH,ada"
+      series: "BTC,ETH,STOX"
     }
     const Url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${DatosUrl.series}&tsyms=MXN`;
     const Configuracion = HttpClient.configurations.v1;
